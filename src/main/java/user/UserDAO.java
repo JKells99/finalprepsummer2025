@@ -41,4 +41,24 @@ public class UserDAO {
         }
         return users;
     }
+
+    public User getUserByUsername(String username) throws IOException {
+        String sql = "SELECT * FROM users2 WHERE username = ?";
+        try (Connection connection = DatabaseConnection.getConnection();
+             var preparedStatement = connection.prepareStatement(sql)) {
+            preparedStatement.setString(1, username);
+            var resultSet = preparedStatement.executeQuery();
+            if (resultSet.next()) {
+                return new User(
+                        resultSet.getString("username"),
+                        resultSet.getString("password"),
+                        resultSet.getString("role")
+                );
+            }
+        } catch (Exception e) {
+            e.printStackTrace();
+            throw new IOException("Error retrieving user by username: " + e.getMessage());
+        }
+        throw new RuntimeException("User not found with username: " + username);
+    }
 }

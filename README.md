@@ -1,11 +1,11 @@
 # Final Prep Summer 2025
 
-This project is a Java-based application designed for user management with role-based access control. It features two main user roles: Commander and Chief. The application uses a PostgreSQL database for storing user information, including securely hashed passwords (BCrypt).
+This project is a Java-based user management application with role-based access control. It features a console menu for user authentication and registration, supporting two main roles: Commander and Chief. User data is stored in a PostgreSQL database, with passwords securely hashed using BCrypt.
 
 ## Project Structure
 
 - **src/main/java/**
-  - `UserMain.java`: Main entry point for the application.
+  - `UserMain.java`: Entry point. Provides a console menu for login, registration, and role-based actions.
   - `database/DatabaseConnection.java`: Handles database connectivity.
   - `logger/CustomLogger.java`: Custom logging utility.
   - `user/`
@@ -18,10 +18,22 @@ This project is a Java-based application designed for user management with role-
 
 ## Features
 
-- User registration and authentication
-- Role-based access (Commander, Chief)
+- Console-based menu for user login, registration, and exit
+- Role-based access (Commander, Chief) with role-specific menus
 - Secure password storage using BCrypt
-- Database schema setup via SQL script
+- User registration and authentication
+- Print all users in the system (report)
+
+## Menu Flow
+
+1. On startup, the system prints all users in the database.
+2. Main menu options:
+   - **Login**: Authenticate and access role-specific menu (Chief or Commander).
+   - **Register**: Create a new user with a chosen role.
+   - **Exit**: Terminate the application.
+3. Role-specific menus:
+   - **Commander**: Print all users report, exit.
+   - **Chief**: Placeholder for future Chief-specific actions.
 
 ## Getting Started
 
@@ -37,8 +49,8 @@ This project is a Java-based application designed for user management with role-
 
 ## Future Improvements
 - Add more user roles and permissions
-- Implement additional business logic and features
+- Expand Chief menu functionality
 - Enhance logging and error handling
 
 ---
-This README provides an overview of the current state of the project. For more details, refer to the source code and documentation within each module.
+This README provides an updated overview of the application's current state and menu flow. For more details, refer to the source code and documentation within each module.

@@ -40,4 +40,24 @@ public class UserService {
             throw new RuntimeException(e);
         }
     }
+
+    public User loginUserToSystem(String username, String password) throws IOException {
+        try {
+            User user = userDAO.getUserByUsername(username);
+            if (user != null) {
+                if (BCrypt.checkpw(password, user.getPassword())) {
+                    return user;
+                } else {
+                    CustomLogger.logError("Invalid Credentials for user: " + username);
+                    throw new RuntimeException("Invalid Credentials, Check Username and Password.");
+                }
+            } else {
+                CustomLogger.logError("Invalid Credentials for user: " + username);
+                throw new RuntimeException("Invalid Credentials, User With Username Not Found.");
+            }
+        } catch (IOException e) {
+            CustomLogger.logError(e.getMessage());
+            throw new RuntimeException(e);
+        }
+    }
 }
