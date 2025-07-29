@@ -1,6 +1,6 @@
 # Final Prep Summer 2025
 
-This project is a Java-based user management application with role-based access control. It features a console menu for user authentication and registration, supporting two main roles: Commander and Chief. User data is stored in a PostgreSQL database, with passwords securely hashed using BCrypt.
+This project is a Java-based user and product management application with role-based access control. It features a console menu for user authentication, registration, and product management, supporting two main roles: Commander and Chief. User and product data are stored in a PostgreSQL database, with passwords securely hashed using BCrypt.
 
 ## Project Structure
 
@@ -8,13 +8,18 @@ This project is a Java-based user management application with role-based access 
   - `UserMain.java`: Entry point. Provides a console menu for login, registration, and role-based actions.
   - `database/DatabaseConnection.java`: Handles database connectivity.
   - `logger/CustomLogger.java`: Custom logging utility.
+  - `product/`
+    - `Product.java`: Product entity.
+    - `ProductDAO.java`: Data access object for product operations.
+    - `ProductService.java`: Business logic for product management.
   - `user/`
     - `User.java`: Base user class.
     - `Commander.java`, `Chief.java`: Role-specific user classes.
     - `UserDAO.java`: Data access object for user operations.
     - `UserService.java`: Business logic for user management.
-- **src/main/resources/scripts.sql**: SQL script for database schema (users table).
+- **src/main/resources/scripts.sql**: SQL script for database schema (users and products tables).
 - **pom.xml**: Maven configuration file.
+- **applicationlogs.txt**: Application log output.
 
 ## Features
 
@@ -26,6 +31,7 @@ This project is a Java-based user management application with role-based access 
 - Product management:
   - Commander: create, delete, search, and view products
   - Chief: view all products
+- Logging of key actions and errors
 
 ## Menu Flow
 
@@ -41,11 +47,20 @@ This project is a Java-based user management application with role-based access 
 ## Getting Started
 
 1. Set up a PostgreSQL database and run the SQL script in `src/main/resources/scripts.sql`.
-2. Update the database connection details in `DatabaseConnection.java`.
+2. Build the project using Maven:
+   ```bash
+   mvn clean install
+   ```
+3. Run the application:
+   ```bash
+   java -cp target/classes UserMain
+   ```
+
 ## Future Improvements
 - Add more user roles and permissions
 - Expand Chief menu functionality
 - Enhance logging and error handling
+- Add more product features (update, categories, etc.)
 
 ---
-This README provides an updated overview of the application's current state and menu flow. For more details, refer to the source code and documentation within each module.
+This README provides an updated overview of the application's current structure, features, and menu flow. For more details, refer to the source code and documentation within each module.
