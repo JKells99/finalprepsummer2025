@@ -62,14 +62,13 @@ public class ProductDAO {
     }
 
     public Product getProductById(int productId) {
-        // Logic to retrieve a product by its ID from the database
-        return null; // Placeholder return statement
+        // TODO: Implement logic to retrieve a product by its ID from the database
+        return null; //
     }
 
 
     public void getAllProducts() throws IOException {
         String sql = "SELECT * FROM products";
-        // Logic to execute the SQL statement and retrieve all products from the database
         try (var connection = DatabaseConnection.getConnection();
              var preparedStatement = connection.prepareStatement(sql)) {
             var resultSet = preparedStatement.executeQuery();

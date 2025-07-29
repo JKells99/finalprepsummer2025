@@ -40,21 +40,12 @@ public class UserMain {
         Scanner scanner = new Scanner(System.in);
 //        Chief chief = new Chief("chiefUsername2", "chiefPassword");
 //        Commander commander = new Commander("commanderUsername2", "commanderPassword");
-//        userService.createNewUser(commander);
-//        userService.createNewUser(chief);
-
-//        User user1 =  userService.loginUserToSystem("chiefUsername2", "chiefPassword");
-
-//        userService.printAllUsersInSystemReport();
-
-
-
 
         boolean running = true;
 
         User currentUser = null;
 
-        while (running) {
+        do {
             while (currentUser == null) {
                 System.out.println("\n1. Login");
                 System.out.println("2. Register");
@@ -64,28 +55,7 @@ public class UserMain {
                 scanner.nextLine();
                 switch (authChoice) {
                     case 1:
-//                        System.out.print("Enter username: ");
-//                        String loginUsername = scanner.nextLine();
-//                        System.out.print("Enter password: ");
-//                        String loginPassword = scanner.nextLine();
-                        User user = userService.loginUserToSystem("chiefUsername2", "chiefPassword");
-                        if (user != null) {
-                            currentUser = user;
-                            // Chief users access the Chief menu
-                            if(Objects.equals(currentUser.getRole(), "Chief")) {
-                                System.out.println("\nYou are logged in as Chief........: " + currentUser.getUsername());
-                                chiefMenu(userService, scanner, currentUser,productService);
-                                break;
-                            // Commander users access the Commander menu
-                            } else if(Objects.equals(currentUser.getRole(), "Commander")) {
-                                System.out.println("\nYou are logged in as Commander: " + currentUser.getUsername());
-                                commanderMenu(userService, scanner, currentUser, productService);
-                            } else {
-                                System.out.println("You do not have permission to access this menu.");
-                            }
-                        } else {
-                            System.out.println("Login failed. Please try again.");
-                        }
+                        logInMenu(userService,scanner,currentUser,productService);
                         break;
                     case 2:
                         System.out.print("Enter username: ");
@@ -96,11 +66,11 @@ public class UserMain {
                         String role = scanner.nextLine();
 
                         // Register user as Chief or Commander
-                        if(role.equals("Chief")){
+                        if (role.equals("Chief")) {
                             Chief newChief = new Chief(regUsername, regPassword);
                             userService.createNewUser(newChief);
                             System.out.println("Registration successful! You can now log in as Chief.");
-                        } else if(role.equals("Commander")){
+                        } else if (role.equals("Commander")) {
                             Commander newCommander = new Commander(regUsername, regPassword);
                             userService.createNewUser(newCommander);
                             System.out.println("Registration successful! You can now log in as Commander.");
@@ -116,13 +86,35 @@ public class UserMain {
                         System.out.println("Invalid option. Please try again.");
                 }
             }
-            if (!running) break;
 
 
-
-        }
+        } while (running);
 
         scanner.close();
+    }
+
+    private static void logInMenu(UserService userService, Scanner scanner, User currentUser, ProductService productService) throws IOException {
+        System.out.print("Enter username: ");
+        String loginUsername = scanner.nextLine();
+        System.out.print("Enter password: ");
+        String loginPassword = scanner.nextLine();
+        User user = userService.loginUserToSystem(loginUsername, loginPassword);
+        if (user != null) {
+            currentUser = user;
+            // Chief users access the Chief menu
+            if (Objects.equals(currentUser.getRole(), "Chief")) {
+                System.out.println("\nYou are logged in as Chief........: " + currentUser.getUsername());
+                chiefMenu(userService, scanner, currentUser, productService);
+                // Commander users access the Commander menu
+            } else if (Objects.equals(currentUser.getRole(), "Commander")) {
+                System.out.println("\nYou are logged in as Commander: " + currentUser.getUsername());
+                commanderMenu(userService, scanner, currentUser, productService);
+            } else {
+                System.out.println("You do not have permission to access this menu.");
+            }
+        } else {
+            System.out.println("Login failed. Please try again.");
+        }
     }
 
     /**
