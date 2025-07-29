@@ -4,3 +4,11 @@ CREATE TABLE users2 (
             password TEXT NOT NULL, -- This stores the BCrypt hash
             role VARCHAR(20) NOT NULL CHECK (role IN ('Commander', 'Chief'))
 );
+
+CREATE TABLE products (
+                          id SERIAL PRIMARY KEY,
+                          name VARCHAR(100) NOT NULL,
+                          description TEXT,
+                          price DECIMAL NOT NULL,
+                          created_at TIMESTAMP DEFAULT CURRENT_TIMESTAMP
+);
