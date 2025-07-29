@@ -41,15 +41,7 @@ This project is a Java-based user management application with role-based access 
 ## Getting Started
 
 1. Set up a PostgreSQL database and run the SQL script in `src/main/resources/scripts.sql`.
-2. Build the project using Maven:
-   ```bash
-   mvn clean install
-   ```
-3. Run the application:
-   ```bash
-   java -cp target/classes UserMain
-   ```
-
+2. Update the database connection details in `DatabaseConnection.java`.
 ## Future Improvements
 - Add more user roles and permissions
 - Expand Chief menu functionality
