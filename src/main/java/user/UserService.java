@@ -11,6 +11,14 @@ public class UserService {
 
     UserDAO userDAO = new UserDAO();
 
+    /**
+     * Creates a new user in the system.
+     * The password is hashed using BCrypt before saving.
+     * Logs success or error messages.
+     *
+     * @param user the user to create
+     * @throws IOException if an I/O error occurs during user creation
+     */
     public void createNewUser(User user) throws IOException {
         try {
             user.setPassword(BCrypt.hashpw(user.getPassword(), BCrypt.gensalt()));
@@ -23,6 +31,12 @@ public class UserService {
 
     }
 
+    /**
+     * Prints a report of all users in the system, sorted by role.
+     * Logs access to the user list.
+     *
+     * @throws IOException if an I/O error occurs during retrieval
+     */
     public void printAllUsersInSystemReport() throws IOException {
         try {
             List<User> users=  userDAO.getAllUsers()
@@ -41,6 +55,15 @@ public class UserService {
         }
     }
 
+    /**
+     * Logs in a user to the system with the provided username and password.
+     * Validates credentials and returns the user object if successful.
+     *
+     * @param username the username of the user
+     * @param password the password of the user
+     * @return the logged-in user
+     * @throws IOException if an I/O error occurs during login
+     */
     public User loginUserToSystem(String username, String password) throws IOException {
         try {
             User user = userDAO.getUserByUsername(username);

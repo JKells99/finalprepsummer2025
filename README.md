@@ -23,6 +23,9 @@ This project is a Java-based user management application with role-based access 
 - Secure password storage using BCrypt
 - User registration and authentication
 - Print all users in the system (report)
+- Product management:
+  - Commander: create, delete, search, and view products
+  - Chief: view all products
 
 ## Menu Flow
 
@@ -32,8 +35,8 @@ This project is a Java-based user management application with role-based access 
    - **Register**: Create a new user with a chosen role.
    - **Exit**: Terminate the application.
 3. Role-specific menus:
-   - **Commander**: Print all users report, exit.
-   - **Chief**: Placeholder for future Chief-specific actions.
+   - **Commander**: Print all users report, create/delete/search/view products, exit.
+   - **Chief**: View all products, exit.
 
 ## Getting Started
 

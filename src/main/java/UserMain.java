@@ -1,3 +1,5 @@
+import product.Product;
+import product.ProductService;
 import user.Chief;
 import user.Commander;
 import user.User;
@@ -34,15 +36,16 @@ public class UserMain {
      */
     public static void main(String[] args) throws IOException {
         UserService userService = new UserService();
+        ProductService productService = new ProductService();
         Scanner scanner = new Scanner(System.in);
-        Chief chief = new Chief("chiefUsername2", "chiefPassword");
-        Commander commander = new Commander("commanderUsername2", "commanderPassword");
+//        Chief chief = new Chief("chiefUsername2", "chiefPassword");
+//        Commander commander = new Commander("commanderUsername2", "commanderPassword");
 //        userService.createNewUser(commander);
 //        userService.createNewUser(chief);
 
 //        User user1 =  userService.loginUserToSystem("chiefUsername2", "chiefPassword");
 
-        userService.printAllUsersInSystemReport();
+//        userService.printAllUsersInSystemReport();
 
 
 
@@ -61,19 +64,22 @@ public class UserMain {
                 scanner.nextLine();
                 switch (authChoice) {
                     case 1:
-                        System.out.print("Enter username: ");
-                        String loginUsername = scanner.nextLine();
-                        System.out.print("Enter password: ");
-                        String loginPassword = scanner.nextLine();
-                        User user = userService.loginUserToSystem(loginUsername, loginPassword);
+//                        System.out.print("Enter username: ");
+//                        String loginUsername = scanner.nextLine();
+//                        System.out.print("Enter password: ");
+//                        String loginPassword = scanner.nextLine();
+                        User user = userService.loginUserToSystem("chiefUsername2", "chiefPassword");
                         if (user != null) {
                             currentUser = user;
+                            // Chief users access the Chief menu
                             if(Objects.equals(currentUser.getRole(), "Chief")) {
                                 System.out.println("\nYou are logged in as Chief........: " + currentUser.getUsername());
-                                chiefMenu(userService, scanner, currentUser);
+                                chiefMenu(userService, scanner, currentUser,productService);
+                                break;
+                            // Commander users access the Commander menu
                             } else if(Objects.equals(currentUser.getRole(), "Commander")) {
                                 System.out.println("\nYou are logged in as Commander: " + currentUser.getUsername());
-                                commanderMenu(userService, scanner, currentUser);
+                                commanderMenu(userService, scanner, currentUser, productService);
                             } else {
                                 System.out.println("You do not have permission to access this menu.");
                             }
@@ -89,6 +95,7 @@ public class UserMain {
                         System.out.println("Enter role(Chief, Commander");
                         String role = scanner.nextLine();
 
+                        // Register user as Chief or Commander
                         if(role.equals("Chief")){
                             Chief newChief = new Chief(regUsername, regPassword);
                             userService.createNewUser(newChief);
@@ -124,33 +131,151 @@ public class UserMain {
      * @param scanner the scanner for user input
      * @param currentUser the currently authenticated user
      */
-    private static void commanderMenu(UserService userService, Scanner scanner, User currentUser) {
-        System.out.println("\nCommander Menu:");
-        System.out.println("1. Print All Users in System Report");
-        System.out.println("2. Exit");
-        System.out.print("Select an option: ");
-        int reportChoice = scanner.nextInt();
-        scanner.nextLine();
-        if(reportChoice == 1) {
-            try {
-                userService.printAllUsersInSystemReport();
-            } catch (IOException e) {
-                System.out.println("Error generating user report: " + e.getMessage());
+    private static void commanderMenu(UserService userService, Scanner scanner, User currentUser, ProductService productService) throws IOException {
+        boolean commanderRunning = true;
+        while (commanderRunning) {
+            System.out.println("\nCommander Menu:");
+            System.out.println("1. Print All Users in System Report");
+            System.out.println("2. Create New Product");
+            System.out.println("3. Delete Product");
+            System.out.println("4. Search Products");
+            System.out.println("5. View All Products");
+            System.out.println("6. Exit");
+            System.out.print("Select an option: ");
+            int reportChoice = scanner.nextInt();
+            scanner.nextLine();
+            switch (reportChoice) {
+                case 1:
+                    userService.printAllUsersInSystemReport();
+                    System.out.println("All users in the system report printed successfully.");
+                    break;
+                case 2:
+                    System.out.println("Creating a new product...");
+                    createNewProduct(scanner, productService);
+                    break;
+                case 3:
+                    System.out.println("Deleting a product...");
+                    deleteProduct(scanner, productService);
+                    break;
+                case 4:
+                    System.out.println("Searching for products...");
+                    searchProducts(scanner, productService);
+                    break;
+                case 5:
+                    System.out.println("Viewing all products...");
+                    viewAllProducts(productService);
+                    break;
+                case 6:
+                    System.out.println("Exiting Commander Menu.");
+                    commanderRunning = false;
+                    break;
+                default:
+                    System.out.println("Invalid option. Please try again.");
             }
-        } else if(reportChoice == 2) {
-            System.out.println("Exiting Commander Menu.");
-        } else {
-            System.out.println("Invalid option. Please try again.");
+        }
+
+    }
+
+    /**
+     * Retrieves and displays all products in the system.
+     * Handles any IO exceptions that may occur during retrieval.
+     * @param productService the product service for product operations
+     */
+    private static void viewAllProducts(ProductService productService) {
+        try {
+            productService.getAllProducts();
+        } catch (IOException e) {
+            System.out.println("Error retrieving products: " + e.getMessage());
         }
     }
 
     /**
-     * Displays the Chief menu and handles Chief-specific actions.
-     * @param userService the user service for user operations
+     * Searches for a product by name and displays its details if found.
      * @param scanner the scanner for user input
-     * @param currentUser the currently authenticated user
+     * @param userService the product service for product operations
      */
-    private static void chiefMenu(UserService userService, Scanner scanner, User currentUser) {
+    private static void searchProducts(Scanner scanner, ProductService userService) {
+        System.out.print("Enter product name to search: ");
+        String productName = scanner.nextLine();
+        Product product = userService.getProductByName(productName);
+        if (product != null) {
+            System.out.println("Product found: " + product.getName() + ", Description: " + product.getDescription() + ", Price: " + product.getPrice());
+        } else {
+            System.out.println("Product not found with name: " + productName);
+        }
+    }
+
+    /**
+     * Deletes a product by its ID after displaying all products.
+     * Handles IO exceptions during deletion.
+     * @param scanner the scanner for user input
+     * @param productService the product service for product operations
+     * @throws IOException if an I/O error occurs
+     */
+    private static void deleteProduct(Scanner scanner, ProductService productService) throws IOException {
+        try {
+            productService.getAllProducts();
+            System.out.print("Enter the ID of the product to delete: ");
+            int productId = scanner.nextInt();
+            scanner.nextLine();
+            productService.deleteProduct(productId);
+        } catch (IOException e) {
+            throw new RuntimeException(e);
+        }
+
+
+    }
+
+    private static void createNewProduct(Scanner scanner, ProductService productService) throws IOException {
+        System.out.println("Creating New Product Menu!:");
+        System.out.print("Enter product name: ");
+        String productName = scanner.nextLine();
+        System.out.print("Enter product description: ");
+        String productDescription = scanner.nextLine();
+        System.out.print("Enter product price: ");
+        double productPrice = scanner.nextDouble();
+
+        Product newProduct = new Product(productName, productDescription, productPrice);
+        productService.createNewProduct(newProduct);
+        return;
+
+    }
+
+    /**
+     * Displays the Chief menu and handles Chief-specific actions.
+     *
+     * @param userService    the user service for user operations
+     * @param scanner        the scanner for user input
+     * @param currentUser    the currently authenticated user
+     * @param productService
+     */
+    private static void chiefMenu(UserService userService, Scanner scanner, User currentUser, ProductService productService) {
         System.out.println("\nChief Menu:");
+        boolean chiefRunning = true;
+        while (chiefRunning) {
+            int choice;
+            System.out.println();
+            System.out.println("Chief Menu Options:");
+            System.out.println("1: view all products");
+            System.out.println("2: Exit Chief Menu");
+            System.out.print("Select an option: ");
+            choice = scanner.nextInt();
+            scanner.nextLine();
+            if (choice == 1) {
+                try {
+                    productService.getAllProducts();
+                } catch (IOException e) {
+                    System.out.println("Error retrieving products: " + e.getMessage());
+                }
+            } else if (choice == 2) {
+                System.out.println("Exiting Chief Menu.");
+                chiefRunning = false;
+                break;
+            } else {
+                System.out.println("Invalid option. Please try again.");
+            }
+
+
+        }
     }
 }
