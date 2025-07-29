@@ -77,7 +77,18 @@ public class ProductDAO {
                 String name = resultSet.getString("name");
                 String description = resultSet.getString("description");
                 double price = resultSet.getDouble("price");
-                System.out.println("ID: " + id + ", Name: " + name + ", Description: " + description + ", Price: " + price);
+                // Use string buffer to format the output better
+                // Print the product details
+                StringBuilder sb = new StringBuilder();
+                sb.append("-----------------------------\n");
+                sb.append("\n");
+                sb.append("Product Details: \n");
+                sb.append("ID: ").append(id).append("\n");
+                sb.append("Name: ").append(name).append("\n");
+                sb.append("Description: ").append(description).append("\n");
+                sb.append("Price: ").append(price).append("\n");
+                sb.append("-----------------------------\n");
+                System.out.println(sb);
             }
         } catch (Exception e) {
             CustomLogger.logError(e.getMessage());

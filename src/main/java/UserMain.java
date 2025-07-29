@@ -94,11 +94,11 @@ public class UserMain {
     }
 
     private static void logInMenu(UserService userService, Scanner scanner, User currentUser, ProductService productService) throws IOException {
-        System.out.print("Enter username: ");
-        String loginUsername = scanner.nextLine();
-        System.out.print("Enter password: ");
-        String loginPassword = scanner.nextLine();
-        User user = userService.loginUserToSystem(loginUsername, loginPassword);
+//        System.out.print("Enter username: ");
+//        String loginUsername = scanner.nextLine();
+//        System.out.print("Enter password: ");
+//        String loginPassword = scanner.nextLine();
+        User user = userService.loginUserToSystem("commanderUsername2", "commanderPassword");
         if (user != null) {
             currentUser = user;
             // Chief users access the Chief menu
