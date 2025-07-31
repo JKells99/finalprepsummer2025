@@ -6,10 +6,11 @@ import java.io.IOException;
 
 public class CustomLogger {
     private static final String filePath = "applicationlogs.txt";
+    private static final String errorLogFilePath = "errorlogs.txt";
     BufferedWriter bufferedWriter;
 
     public static void logError(String message) throws IOException {
-        try (BufferedWriter writer = new BufferedWriter(new FileWriter(filePath, true))) {
+        try (BufferedWriter writer = new BufferedWriter(new FileWriter(errorLogFilePath, true))) {
             writer.write("Error: " + message);
             writer.newLine();
         }

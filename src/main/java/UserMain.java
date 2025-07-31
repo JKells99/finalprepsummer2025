@@ -58,26 +58,7 @@ public class UserMain {
                         logInMenu(userService,scanner,currentUser,productService);
                         break;
                     case 2:
-                        System.out.print("Enter username: ");
-                        String regUsername = scanner.nextLine();
-                        System.out.print("Enter password: ");
-                        String regPassword = scanner.nextLine();
-                        System.out.println("Enter role(Chief, Commander");
-                        String role = scanner.nextLine();
-
-                        // Register user as Chief or Commander
-                        if (role.equals("Chief")) {
-                            Chief newChief = new Chief(regUsername, regPassword);
-                            userService.createNewUser(newChief);
-                            System.out.println("Registration successful! You can now log in as Chief.");
-                        } else if (role.equals("Commander")) {
-                            Commander newCommander = new Commander(regUsername, regPassword);
-                            userService.createNewUser(newCommander);
-                            System.out.println("Registration successful! You can now log in as Commander.");
-                        } else {
-                            System.out.println("Invalid role. Please try again.");
-                            continue;
-                        }
+                        registerMenu(userService, scanner);
                         break;
                     case 3:
                         running = false;
@@ -86,11 +67,30 @@ public class UserMain {
                         System.out.println("Invalid option. Please try again.");
                 }
             }
-
-
         } while (running);
 
         scanner.close();
+    }
+
+    private static void registerMenu(UserService userService, Scanner scanner) throws IOException {
+        System.out.print("Enter username: ");
+        String regUsername = scanner.nextLine();
+        System.out.print("Enter password: ");
+        String regPassword = scanner.nextLine();
+        System.out.println("Enter role(Chief, Commander");
+        String role = scanner.nextLine();
+        if (role.equals("Chief")) {
+            Chief newChief = new Chief(regUsername, regPassword);
+            userService.createNewUser(newChief);
+            System.out.println("Registration successful! You can now log in as Chief.");
+        } else if (role.equals("Commander")) {
+            Commander newCommander = new Commander(regUsername, regPassword);
+            userService.createNewUser(newCommander);
+            System.out.println("Registration successful! You can now log in as Commander.");
+        } else {
+            System.out.println("Invalid role. Please try again.");
+
+        }
     }
 
     private static void logInMenu(UserService userService, Scanner scanner, User currentUser, ProductService productService) throws IOException {
@@ -98,7 +98,7 @@ public class UserMain {
 //        String loginUsername = scanner.nextLine();
 //        System.out.print("Enter password: ");
 //        String loginPassword = scanner.nextLine();
-        User user = userService.loginUserToSystem("commanderUsername2", "commanderPassword");
+        User user = userService.loginUserToSystem("chiefUsername2", "chiefPassword");
         if (user != null) {
             currentUser = user;
             // Chief users access the Chief menu
@@ -186,7 +186,7 @@ public class UserMain {
      * @param scanner the scanner for user input
      * @param userService the product service for product operations
      */
-    private static void searchProducts(Scanner scanner, ProductService userService) {
+    private static void searchProducts(Scanner scanner, ProductService userService) throws IOException {
         System.out.print("Enter product name to search: ");
         String productName = scanner.nextLine();
         Product product = userService.getProductByName(productName);
@@ -249,7 +249,8 @@ public class UserMain {
             System.out.println();
             System.out.println("Chief Menu Options:");
             System.out.println("1: view all products");
-            System.out.println("2: Exit Chief Menu");
+            System.out.println("2 Print Inventory Value Report");
+            System.out.println("3: Exit Chief Menu");
             System.out.print("Select an option: ");
             choice = scanner.nextInt();
             scanner.nextLine();
@@ -260,9 +261,12 @@ public class UserMain {
                     System.out.println("Error retrieving products: " + e.getMessage());
                 }
             } else if (choice == 2) {
+                productService.printInventoryReport();
+
+            } else if (choice == 3) {
                 System.out.println("Exiting Chief Menu.");
                 chiefRunning = false;
-                break;
+
             } else {
                 System.out.println("Invalid option. Please try again.");
             }

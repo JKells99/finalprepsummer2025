@@ -39,7 +39,7 @@ public class ProductDAO {
 
     }
 
-    public Product getProductByName(String productName) {
+    public Product getProductByName(String productName) throws IOException {
         String sql = "SELECT * FROM products WHERE name = ?";
         // Logic to execute the SQL statement and retrieve a product by its name from the database
         try (var connection = DatabaseConnection.getConnection();
@@ -55,7 +55,9 @@ public class ProductDAO {
                         resultSet.getTimestamp("created_at").toLocalDateTime()
                 );
             }
-        } catch (SQLException e) {
+            CustomLogger.logInfo("Data Accessed: Product Name: " + productName);
+        } catch (SQLException | IOException e) {
+            CustomLogger.logError(e.getMessage());
             throw new RuntimeException(e);
         }
         return null;
@@ -63,6 +65,7 @@ public class ProductDAO {
 
     public Product getProductById(int productId) {
         // TODO: Implement logic to retrieve a product by its ID from the database
+
         return null; //
     }
 
@@ -89,11 +92,28 @@ public class ProductDAO {
                 sb.append("Price: ").append(price).append("\n");
                 sb.append("-----------------------------\n");
                 System.out.println(sb);
+                CustomLogger.logInfo("Product Details Accessed");
             }
         } catch (Exception e) {
             CustomLogger.logError(e.getMessage());
             System.out.println(e.getMessage());
         }
 
+    }
+
+    public int getProductValueForWholeStore() throws IOException {
+        String sql = "SELECT SUM(price) AS total_value FROM products";
+        try (var connection = DatabaseConnection.getConnection();
+             var preparedStatement = connection.prepareStatement(sql)) {
+            var resultSet = preparedStatement.executeQuery();
+            if (resultSet.next()) {
+                CustomLogger.logInfo("Total Value of Inventory Accessed: $" + resultSet.getInt("total_value"));
+                return resultSet.getInt("total_value");
+            }
+        } catch (SQLException e) {
+            CustomLogger.logError(e.getMessage());
+            System.out.println(e.getMessage());
+        }
+        return 0;
     }
 }

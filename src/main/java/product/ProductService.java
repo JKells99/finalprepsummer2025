@@ -25,7 +25,7 @@ public class ProductService {
         }
     }
 
-    public Product getProductByName(String productName) {
+    public Product getProductByName(String productName) throws IOException {
         Product product = productDAO.getProductByName(productName);
         if (product != null) {
             System.out.println("Product found: " + product.getName());
@@ -33,6 +33,16 @@ public class ProductService {
         } else {
             System.err.println("Product not found with name: " + productName);
             return null;
+        }
+    }
+
+    public void printInventoryReport() {
+        try {
+            int totalValueOfInventory = productDAO.getProductValueForWholeStore();
+            String report = "Total Value of Inventory: $" + totalValueOfInventory;
+            System.out.println(report);
+        } catch (IOException e) {
+            System.out.println("Error generating inventory report: " + e.getMessage());
         }
     }
 }
